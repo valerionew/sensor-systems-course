@@ -1,0 +1,5 @@
+main.c:87:6:HAL_GPIO_EXTI_Callback	0	static
+main.c:100:6:my_timer_load	104	static,ignoring_inline_asm
+main.c:244:6:SystemClock_Config	88	static,ignoring_inline_asm
+main.c:175:5:main	128	static,ignoring_inline_asm
+main.c:443:6:Error_Handler	0	static,ignoring_inline_asm
