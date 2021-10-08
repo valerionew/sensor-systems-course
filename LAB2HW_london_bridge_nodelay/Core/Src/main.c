@@ -45,7 +45,7 @@ typedef struct  {
 #define B5 FREQ_TO_TICKS(494)
 
 #define CLOCK_FREQ 84e6
-#define TIM1_PRESCALER 4000
+// #define TIM1_PRESCALER 4000
 
 #define SONG_LENGTH 13
 
@@ -103,7 +103,7 @@ void my_timer_load(int ticks)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 4000-1;
+  htim1.Init.Prescaler = TIM1_PRESCALER-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = ticks;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
