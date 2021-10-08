@@ -1,8 +1,0 @@
-main.c:87:6:HAL_GPIO_EXTI_Callback	16	static
-main.c:100:6:my_timer_load	104	static
-main.c:175:5:main	16	static
-main.c:244:6:SystemClock_Config	88	static
-main.c:289:13:MX_TIM1_Init	96	static
-main.c:364:13:MX_USART2_UART_Init	8	static
-main.c:397:13:MX_GPIO_Init	48	static
-main.c:443:6:Error_Handler	4	static,ignoring_inline_asm
