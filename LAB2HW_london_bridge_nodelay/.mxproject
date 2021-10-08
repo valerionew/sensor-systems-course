@@ -9,17 +9,17 @@ CDefines=USE_HAL_DRIVER;STM32F401xE;USE_HAL_DRIVER;USE_HAL_DRIVER;
 [PreviousGenFiles]
 AdvancedFolderStructure=true
 HeaderFileListSize=3
-HeaderFiles#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Inc/stm32f4xx_it.h
-HeaderFiles#1=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Inc/stm32f4xx_hal_conf.h
-HeaderFiles#2=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Inc/main.h
+HeaderFiles#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Inc/stm32f4xx_it.h
+HeaderFiles#1=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Inc/stm32f4xx_hal_conf.h
+HeaderFiles#2=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Inc/main.h
 HeaderFolderListSize=1
-HeaderPath#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Inc
+HeaderPath#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Inc
 HeaderFiles=;
 SourceFileListSize=3
-SourceFiles#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Src/stm32f4xx_it.c
-SourceFiles#1=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Src/stm32f4xx_hal_msp.c
-SourceFiles#2=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Src/main.c
+SourceFiles#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Src/stm32f4xx_it.c
+SourceFiles#1=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Src/stm32f4xx_hal_msp.c
+SourceFiles#2=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Src/main.c
 SourceFolderListSize=1
-SourcePath#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_rip/Core/Src
+SourcePath#0=C:/Users/valerio/STM32CubeIDE/workspace_1.7.0/LAB2HW_london_bridge_nodelay/Core/Src
 SourceFiles=;
 

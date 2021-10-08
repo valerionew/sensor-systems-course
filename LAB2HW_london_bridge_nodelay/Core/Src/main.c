@@ -156,6 +156,27 @@ void my_timer_load(int ticks)
   HAL_TIM_MspPostInit(&htim1);
 
 }
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	static int current_note = 0;
+	static int remaining_ticks = 0;
+
+	if(current_note < SONG_LENGTH+1){
+		// if it's time for the next note AND it's not last note yet
+		if((remaining_ticks == 0)){
+			// load next note
+			my_timer_load(song[current_note].freq_ticks);
+			remaining_ticks = song[current_note].duration_ticks;
+			  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+			current_note++; // advance note
+		}
+		else {
+			// downcount ticks
+			remaining_ticks--;
+		}
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -165,20 +186,20 @@ void my_timer_load(int ticks)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
-	song[ 0].freq_ticks = G4;    song[ 0].duration_ticks = 1.25	*BASE_MS; // lon
-	song[ 1].freq_ticks = A5;	 song[ 1].duration_ticks = 0.75	*BASE_MS; // don
-	song[ 2].freq_ticks = G4;	 song[ 2].duration_ticks = 1	*BASE_MS; // bridge
-	song[ 3].freq_ticks = F4;	 song[ 3].duration_ticks = 1	*BASE_MS; // is
-	song[ 4].freq_ticks = E4;	 song[ 4].duration_ticks = 1	*BASE_MS; // fal
-	song[ 5].freq_ticks = F4;	 song[ 5].duration_ticks = 1	*BASE_MS; // ling
-	song[ 6].freq_ticks = G4;	 song[ 6].duration_ticks = 2	*BASE_MS; // down
-	song[ 7].freq_ticks = D4;	 song[ 7].duration_ticks = 1	*BASE_MS; // fal
-	song[ 8].freq_ticks = E4;	 song[ 8].duration_ticks = 1	*BASE_MS; // ling
-	song[ 9].freq_ticks = F4;	 song[ 9].duration_ticks = 2	*BASE_MS; // down
-	song[10].freq_ticks = E4;	 song[10].duration_ticks = 1	*BASE_MS; // fal
-	song[11].freq_ticks = F4;	 song[11].duration_ticks = 1	*BASE_MS; // ling
-	song[12].freq_ticks = G4;	 song[12].duration_ticks = 2	*BASE_MS; // down
+  // time is multiplied by 4 so that we get an integer amount of ticks
+	song[ 0].freq_ticks = G4;    song[ 0].duration_ticks = 1.25	*4; // lon
+	song[ 1].freq_ticks = A5;	 song[ 1].duration_ticks = 0.75	*4; // don
+	song[ 2].freq_ticks = G4;	 song[ 2].duration_ticks = 1	*4; // bridge
+	song[ 3].freq_ticks = F4;	 song[ 3].duration_ticks = 1	*4; // is
+	song[ 4].freq_ticks = E4;	 song[ 4].duration_ticks = 1	*4; // fal
+	song[ 5].freq_ticks = F4;	 song[ 5].duration_ticks = 1	*4; // ling
+	song[ 6].freq_ticks = G4;	 song[ 6].duration_ticks = 2	*4; // down
+	song[ 7].freq_ticks = D4;	 song[ 7].duration_ticks = 1	*4; // fal
+	song[ 8].freq_ticks = E4;	 song[ 8].duration_ticks = 1	*4; // ling
+	song[ 9].freq_ticks = F4;	 song[ 9].duration_ticks = 2	*4; // down
+	song[10].freq_ticks = E4;	 song[10].duration_ticks = 1	*4; // fal
+	song[11].freq_ticks = F4;	 song[11].duration_ticks = 1	*4; // ling
+	song[12].freq_ticks = G4;	 song[12].duration_ticks = 2	*4; // down
 
 
 	// +++ END +++
@@ -209,22 +230,15 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
-
+  HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	if(song_playing == 1){
-	  for(int i = 0; i < SONG_LENGTH+1; i++){
-		  my_timer_load(song[i].freq_ticks);
-		  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-		  HAL_Delay(song[i].duration_ticks);
-	  }
-	  song_playing = 0;
-	}
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -297,9 +311,9 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 4000-1;
+  htim1.Init.Prescaler = TIM1_PRESCALER-1;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 666;
+  htim1.Init.Period = 0;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -323,7 +337,7 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 333;
+  sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -365,17 +379,16 @@ static void MX_TIM2_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 0;
+  htim2.Init.Prescaler = 4000;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4294967295;
+  htim2.Init.Period = 800;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -385,21 +398,9 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
