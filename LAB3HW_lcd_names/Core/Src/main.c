@@ -46,7 +46,7 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-char names[][11] = {"Alessandro", "Valerio", "Federico", "Lorenzo", "Mattia"};
+char names[][11] = {"Alessandro", "Federico","Lorenzo", "Mattia", "Valerio" };
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,6 +107,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
   lcd_initialize();
   lcd_backlight_ON();
+  lcd_clear();
+
+  // lcd first row condition
+  lcd_println(names[0],1);
+  HAL_Delay(1000);
 
   HAL_TIM_Base_Start_IT(&htim2);
 
