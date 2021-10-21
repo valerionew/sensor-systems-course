@@ -69,7 +69,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	uint32_t ADC_value = HAL_ADC_GetValue(hadc);
 	char message [8];
-	int length = snprintf(message, sizeof(message)-1, "%.2fV\r\n", (3.3*ADC_value)/4096);
+	int length = snprintf(message, sizeof(message), "%.2fV\r\n", (3.3*ADC_value)/4096);
 	lcd_println(message, 0);
 	lcd_drawBar((80*ADC_value)/4096);
 	HAL_UART_Transmit(&huart2, (uint8_t*)message, length, 100);
