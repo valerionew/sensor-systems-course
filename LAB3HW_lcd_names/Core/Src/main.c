@@ -111,8 +111,8 @@ int main(void)
 
   // lcd first row condition
   lcd_println(names[0],1);
-  HAL_Delay(1000);
 
+  __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
   HAL_TIM_Base_Start_IT(&htim2);
 
   /* USER CODE END 2 */
