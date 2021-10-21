@@ -113,7 +113,9 @@ int main(void)
   lcd_println(names[0],1);
 
   __HAL_TIM_CLEAR_IT(&htim2, TIM_IT_UPDATE);
-  HAL_TIM_Base_Start_IT(&htim2);
+ if(HAL_TIM_Base_Start_IT(&htim2) != HAL_OK){
+	  Error_Handler();
+  }
 
   /* USER CODE END 2 */
 

@@ -64,16 +64,20 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	    HAL_StatusTypeDef ADC_return = HAL_ADC_PollForConversion(&hadc1, 100);
-		if (ADC_return == HAL_OK){ //
+
+		if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK){ //
 			uint32_t ADC_value = HAL_ADC_GetValue(&hadc1);
 			char message [8];
-			snprintf(message,8, (uint8_t*)"%.2fV\r\n", (3.3*ADC_value)/4096);
-			HAL_UART_Transmit(&huart2, (uint8_t*)message, 7, 100);
-			HAL_Delay(1000);
-			HAL_ADC_Start(&hadc1);
+			int length = snprintf(message, sizeof(message), "%.2fV\r\n", (3.3*ADC_value)/4096);
+			HAL_UART_Transmit(&huart2, (uint8_t*)message, length-1, 100);
+
+			 if(HAL_ADC_Start(&hadc1) != HAL_OK){
+				  Error_Handler();
+			  }
 		}
 }
+
+
 /* USER CODE END 0 */
 
 /**
@@ -109,10 +113,21 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_UART_Transmit(&huart2, (uint8_t *)"ready\r\n", 7, 100);
-  HAL_ADC_Start(&hadc1);
+  {	// this scope is created so that the ready_message variable can be destroyed afterwards: no waste
+	char ready_message[] = "ready\r\n";
+	// sizeof(ready_message)-1 because we don't want to transmit '\0'
+    HAL_UART_Transmit(&huart2, (uint8_t *)ready_message, sizeof(ready_message)-1, 100);
+  }
 
-  HAL_TIM_Base_Start_IT(&htim2);
+
+  if(HAL_ADC_Start(&hadc1) != HAL_OK){
+	  Error_Handler();
+  }
+
+ if(HAL_TIM_Base_Start_IT(&htim2) != HAL_OK){
+	  Error_Handler();
+  }
+
 
   /* USER CODE END 2 */
 

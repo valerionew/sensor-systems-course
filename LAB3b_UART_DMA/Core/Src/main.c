@@ -46,7 +46,7 @@ UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
-char message[] = "Nome cognome data di nascita\n";
+char message[] = "Nome cognome data di nascita\r\n";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,8 +63,8 @@ static void MX_TIM2_Init(void);
 /* USER CODE BEGIN 0 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	// TODO: check if correct timer has interrputed
-	char message[] = "second\n";
-	HAL_UART_Transmit_DMA(&huart2, (uint8_t*)(message), sizeof(message));
+	char message[] = "second\r\n";
+	HAL_UART_Transmit_DMA(&huart2, (uint8_t*)(message), sizeof(message)-1);
 
 }
 /* USER CODE END 0 */
@@ -101,8 +101,11 @@ int main(void)
   MX_DMA_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Transmit_DMA(&huart2, (uint8_t*)(message), sizeof(message));
-  HAL_TIM_Base_Start_IT(&htim2);
+  HAL_UART_Transmit_DMA(&huart2, (uint8_t*)(message), sizeof(message)-1);
+
+ if(HAL_TIM_Base_Start_IT(&htim2) != HAL_OK){
+	  Error_Handler();
+  }
 
   /* USER CODE END 2 */
 

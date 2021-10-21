@@ -64,8 +64,12 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	uint32_t ADC_value = HAL_ADC_GetValue(hadc);
 	char message [8];
-	int length = snprintf(message,8, (uint8_t*)"%.2fV\r\n", (3.3*ADC_value)/4096);
-	HAL_UART_Transmit(&huart2, (uint8_t*)message, length, 100);
+
+
+	int length = snprintf(message, sizeof(message), "%.2fV\r\n", (3.3*ADC_value)/4096);
+
+	// length -1 because we don't want to transmit '\0'
+	HAL_UART_Transmit(&huart2, message, length-1, 100);
 }
 
 /* USER CODE END 0 */
@@ -102,9 +106,11 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_UART_Transmit(&huart2, (uint8_t *)"ready\r\n", 7, 100);
-  HAL_ADC_Start(&hadc1);
-
+  {	// this scope is created so that the ready_message variable can be destroyed afterwards: no waste
+	char ready_message[] = "ready\r\n";
+	// sizeof(ready_message)-1 because we don't want to transmit '\0'
+    HAL_UART_Transmit(&huart2, (uint8_t *)ready_message, sizeof(ready_message)-1, 100);
+  }
 
   /* USER CODE END 2 */
 
@@ -112,7 +118,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_ADC_Start_IT(&hadc1);
+	  if(HAL_ADC_Start_IT(&hadc1) != HAL_OK){
+	  	  Error_Handler();
+	    }
+
 	  HAL_Delay(1000);
 
     /* USER CODE END WHILE */

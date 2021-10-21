@@ -116,7 +116,8 @@ int main(void)
   lcd_clear();
 
   {	// this scope is created so that the ready_message variable can be destroyed afterwards: no waste
-	char ready_message[] = "Ready to start conversion!\r\n";
+	char ready_message[] = "ready\r\n";
+	// sizeof(ready_message)-1 because we don't want to transmit '\0'
     HAL_UART_Transmit(&huart2, (uint8_t *)ready_message, sizeof(ready_message)-1, 100);
   }
 
