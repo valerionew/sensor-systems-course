@@ -1,1 +1,1 @@
-# STM32 Cube IDE workspace for the Sensor Systems course
+# https://valerionew.github.io/triennale-elettronica-polimi/
